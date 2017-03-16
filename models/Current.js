@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var User = mongoose.model('User', {
+var Current = mongoose.model('Current', {
   name: {
     type: String,
     required: true,
@@ -12,19 +12,9 @@ var User = mongoose.model('User', {
     required: true,
     trim: true,
     minlength: 1
-  },
-  mobile: {
-    type: Number,
-    default: null
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 3,
-    trim: true
   }
 });
 
-module.exports = { User }
+module.exports = { Current }
 
 

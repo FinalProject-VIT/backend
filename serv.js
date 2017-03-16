@@ -7,7 +7,7 @@ var { Product } = require('./models/Product');
 var { User } = require('./models/user');
 var { myCart } = require('./models/myCart');
 var { Current } = require('./models/Current');
-
+var { Gocart } = require('./models/Gocart');
 
 var app = express();
 const port = process.env.PORT || 3000;
@@ -67,10 +67,6 @@ app.post('/signup', (req, res) => {
 // 4 get signin ||
 app.post('/signin', (req, res) => {
   User.find({ email: req.body.email, password: req.body.password }).then((result) => {
-    if(result.length === 0){
-      res.send([])
-      return
-    }
     Current.remove({}, (done) => {
       var current = new Current({
         name: result[0].name,
@@ -135,22 +131,23 @@ app.post('/cart', (req, res) => {
   let promises = []
   let response = []
   myCart.find({ email: myemail }).then((result) => {
-    result.forEach((item) => {
-      promises.push(Product.find({ id: item.id }))
-    })
-    return Promise.all(promises)
+    return Promise.all(
+      result.map((item) => {
+        console.log(item.id)
+        return Product.find({ id: item.id })
+      })
+    )
   })
     .then((data) => {
+      console.log('########', data)
       let modifieddata = []
       data.forEach((item) => {
-
         const objectData = item[0]
         modifieddata.push(objectData)
       })
       res.send(modifieddata)
     }).catch()
 })
-
 
 app.listen(port, () => {
   console.log(`Started up at port ${port}`);
